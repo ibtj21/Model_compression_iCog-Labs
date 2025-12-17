@@ -1,45 +1,53 @@
-import matplotlib.pyplot as plt
-import numpy as np
+import plotly.graph_objects as go
 
 # -----------------------------
-# Data from your experiments
+# Metrics (your real results)
 # -----------------------------
 models = ["Original", "Pruned", "Quantized"]
 
-model_size = [12.46, 12.46, 3.17]          # MB
-inference_time = [1.21, 1.14, 1.09]        # ms/sample
-accuracy = [98.74, 98.63, 98.74]           # %
-
-x = np.arange(len(models))
-width = 0.6
+model_size = [12.46, 12.46, 3.17]      # MB
+inference_time = [1.21, 1.14, 1.09]    # ms/sample
+accuracy = [98.74, 98.63, 98.74]       # %
 
 # -----------------------------
-# Plot Model Size
+# Create figure
 # -----------------------------
-plt.figure()
-plt.bar(x, model_size, width)
-plt.xticks(x, models)
-plt.ylabel("Model Size (MB)")
-plt.title("Model Size Comparison")
-plt.show()
+fig = go.Figure()
+
+fig.add_trace(go.Bar(
+    name="Model Size (MB)",
+    x=models,
+    y=model_size,
+    hovertemplate="Model: %{x}<br>Size: %{y} MB<extra></extra>"
+))
+
+fig.add_trace(go.Bar(
+    name="Inference Time (ms/sample)",
+    x=models,
+    y=inference_time,
+    hovertemplate="Model: %{x}<br>Time: %{y} ms<extra></extra>"
+))
+
+fig.add_trace(go.Bar(
+    name="Accuracy (%)",
+    x=models,
+    y=accuracy,
+    hovertemplate="Model: %{x}<br>Accuracy: %{y}%<extra></extra>"
+))
 
 # -----------------------------
-# Plot Inference Time
+# Layout
 # -----------------------------
-plt.figure()
-plt.bar(x, inference_time, width)
-plt.xticks(x, models)
-plt.ylabel("Inference Time (ms/sample)")
-plt.title("Inference Time Comparison")
-plt.show()
+fig.update_layout(
+    title="Model Compression Comparison",
+    xaxis_title="Model Version",
+    yaxis_title="Metric Value",
+    barmode="group",
+    template="plotly_white",
+    legend_title="Metrics"
+)
 
 # -----------------------------
-# Plot Accuracy
+# Show plot
 # -----------------------------
-plt.figure()
-plt.bar(x, accuracy, width)
-plt.xticks(x, models)
-plt.ylabel("Accuracy (%)")
-plt.title("Accuracy Comparison")
-plt.ylim(95, 100)  # zoom for clarity
-plt.show()
+fig.show()
