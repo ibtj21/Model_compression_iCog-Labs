@@ -1,4 +1,3 @@
-```markdown
 # Model_compression_iCog-Labs
 
 ## Project Description
