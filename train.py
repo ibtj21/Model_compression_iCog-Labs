@@ -1,15 +1,17 @@
 import sys
 sys.stdout.reconfigure(encoding='utf-8')
 
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-from torchvision import datasets, transforms
-from torch.utils.data import DataLoader
+import torch #Core PyTorch library
+import torch.nn as nn #Tools for defining neural network layers
+import torch.nn.functional as F #Activation functions and operations
+from torchvision import datasets, transforms #Dataset and image transformation utilities
+from torch.utils.data import DataLoader #Data loading utilities
 import os
-
+"""The file begins by configuring the console to properly display text and importing all required 
+PyTorch and torchvision libraries. These libraries provide the tools needed to define neural networks,
+load datasets, train models, and save learned parameters."""
 # -----------------------------
-# Step 1: Define a slightly bigger CNN
+# Step 1: Define  CNN(convolutional neural network)
 # -----------------------------
 class SmallCNN(nn.Module):
     def __init__(self):
@@ -32,7 +34,11 @@ class SmallCNN(nn.Module):
         x = F.relu(self.fc2(x))
         x = self.fc3(x)
         return x
-
+"""A small convolutional neural network (CNN) is defined. The model is designed to process grayscale
+images and extract meaningful features using convolutional layers, followed by pooling to reduce spatial 
+dimensions. The extracted features are then passed through multiple fully connected layers to perform 
+digit classification. This architecture is intentionally larger than a minimal model so that the effects 
+of pruning and quantization can be observed later."""
 # -----------------------------
 # Step 2: Prepare MNIST dataset
 # -----------------------------
@@ -53,20 +59,25 @@ test_dataset = datasets.MNIST(
 
 train_loader = DataLoader(train_dataset, batch_size=64, shuffle=True)
 test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
-
+"""The MNIST dataset is downloaded and prepared for training and testing. Images are converted into 
+tensors and loaded into DataLoaders, which manage batching and shuffling. This allows efficient and 
+organized feeding of data into the model during training and evaluation."""
 # -----------------------------
 # Step 3: Initialize model, optimizer, loss
 # -----------------------------
-device = torch.device("cpu")  # change to 'cuda' if GPU available
+device = torch.device("cpu")  
 model = SmallCNN().to(device)
 
 criterion = nn.CrossEntropyLoss()
 optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
+"""The model is initialized on the selected device (CPU in this case). A loss function suitable for 
+multi-class classification and an optimizer are defined. These components determine how prediction 
+errors are measured and how model weights are updated during training."""
 
 # -----------------------------
 # Step 4: Train the model
 # -----------------------------
-num_epochs = 3  # you can increase for better accuracy
+num_epochs = 3  
 for epoch in range(num_epochs):
     running_loss = 0.0
     for images, labels in train_loader:
@@ -83,6 +94,9 @@ for epoch in range(num_epochs):
     print(f"Epoch [{epoch+1}/{num_epochs}], Loss: {running_loss/len(train_loader):.4f}")
 
 print("✅ Model training complete")
+"""The model is trained for a fixed number of epochs. During each epoch, training data is passed 
+through the network, predictions are made, and errors are computed. The model learns by adjusting 
+its weights through backpropagation, gradually reducing the loss as training progresses."""
 
 # -----------------------------
 # Step 5: Save the model

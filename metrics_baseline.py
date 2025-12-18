@@ -1,6 +1,7 @@
 import sys
 sys.stdout.reconfigure(encoding='utf-8')
-
+"""This script loads the pre-trained CNN model from disk and evaluates it on the MNIST test set to 
+measure baseline model size, inference time, and accuracy."""
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -48,7 +49,7 @@ test_loader = DataLoader(test_dataset, batch_size=64, shuffle=False)
 # -----------------------------
 # Step 3: Load trained model
 # -----------------------------
-device = torch.device("cpu")  # change to 'cuda' if GPU available
+device = torch.device("cpu")  
 model = SmallCNN()
 model.load_state_dict(torch.load("mnist_cnn.pt", map_location=device))
 model.to(device)
@@ -58,7 +59,7 @@ print("✅ Model loaded successfully")
 # -----------------------------
 # Step 4: Measure Model Size
 # -----------------------------
-torch.save(model.state_dict(), "temp_model.pt")
+torch.save(model.state_dict(), "temp_model.pt") #saves only the weights and biases of the model (not the whole model code
 model_size = os.path.getsize("temp_model.pt") / (1024*1024)  # size in MB
 os.remove("temp_model.pt")
 

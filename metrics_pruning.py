@@ -59,7 +59,7 @@ print("✅ Original model loaded successfully")
 prune.ln_structured(model.conv1, name='weight', amount=0.3, n=2, dim=0)
 prune.ln_structured(model.conv2, name='weight', amount=0.3, n=2, dim=0)
 
-# Optionally, remove pruning re-parametrization to make permanent
+#remove pruning re-parametrization to make permanent
 prune.remove(model.conv1, 'weight')
 prune.remove(model.conv2, 'weight')
 
